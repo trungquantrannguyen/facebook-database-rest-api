@@ -5,20 +5,25 @@ import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import * as bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User) private readonly userModel: typeof User) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto) {
     const hashPassword = await bcrypt.hash(createUserDto.password, 10);
-    return this.userModel.create({
+    const newUser = await this.userModel.create({
       username: createUserDto.username,
       email: createUserDto.email,
       password: hashPassword,
       fullname: createUserDto.fullname,
       bio: createUserDto.bio,
     });
+
+    const { pass, ...result } = newUser.dataValues;
+
+    return { result };
   }
   async searchUser(username?: string): Promise<User[]> {
     if (username) {

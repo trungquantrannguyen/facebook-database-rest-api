@@ -14,16 +14,16 @@ import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const databaseConfig = {
-  dialect: process.env.DATABASE_DIALECT,
-  host: process.env.DATABASE_HOST,
-  port: parseInt(process.env.DATABASE_PORT),
-  username: process.env.DATABASE_DIALECT,
-  password: process.env.DATABASE_DIALECT,
-  database: process.env.DATABASE_DIALECT,
-  autoLoadModels: true,
-  synchronize: true,
-};
+// const databaseConfig = {
+//   dialect: process.env.DATABASE_DIALECT,
+//   host: process.env.DATABASE_HOST,
+//   port: parseInt(process.env.DATABASE_PORT),
+//   username: process.env.DATABASE_DIALECT,
+//   password: process.env.DATABASE_DIALECT,
+//   database: process.env.DATABASE_DIALECT,
+//   autoLoadModels: true,
+//   synchronize: true,
+// };
 
 @Module({
   imports: [

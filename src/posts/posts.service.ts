@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -8,11 +8,8 @@ import { Post } from './entities/post.entity';
 export class PostsService {
   constructor(@InjectModel(Post) private readonly postModel: typeof Post) {}
 
-  createPost(createPostDto: CreatePostDto) {
-    return this.postModel.create({
-      content: createPostDto.content,
-      image: createPostDto.image,
-    });
+  createPost(createPostDto: CreatePostDto, req: any) {
+    console.log(req);
   }
   searchPost() {
     throw new Error('Method not implemented.');
