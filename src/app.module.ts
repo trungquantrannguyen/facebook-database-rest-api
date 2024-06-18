@@ -5,9 +5,10 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { FriendshipsModule } from './friendships/friendships.module';
 import { CommentsModule } from './comments/comments.module';
-import { LikesModule } from './likes/likes.module';
 import { SharesModule } from './shares/shares.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ReactionsModule } from './reactions/reactions.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,8 +26,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
     PostsModule,
     FriendshipsModule,
     CommentsModule,
-    LikesModule,
     SharesModule,
+    ReactionsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

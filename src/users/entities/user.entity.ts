@@ -15,7 +15,7 @@ import {
 } from 'sequelize-typescript';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { Friendship } from 'src/friendships/entities/friendship.entity';
-import { Like } from 'src/likes/entities/like.entity';
+import { Reaction } from './../../reactions/entities/reaction.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { Share } from 'src/shares/entities/share.entity';
 
@@ -35,7 +35,7 @@ export class User extends Model {
   @AllowNull(false)
   @IsEmail
   @Column
-  emai: string;
+  email: string;
 
   @AllowNull(false)
   @Column
@@ -61,8 +61,8 @@ export class User extends Model {
   @HasMany(() => Post)
   posts: Post[];
 
-  @HasMany(() => Like)
-  likes: Like[];
+  @HasMany(() => Reaction)
+  likes: Reaction[];
 
   @HasMany(() => Share)
   shares: Share[];

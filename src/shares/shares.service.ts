@@ -4,23 +4,16 @@ import { UpdateShareDto } from './dto/update-share.dto';
 
 @Injectable()
 export class SharesService {
-  create(createShareDto: CreateShareDto) {
-    return 'This action adds a new share';
+  sharePost(postID: string, createShareDto: CreateShareDto) {
+    throw new Error('Method not implemented.');
   }
-
-  findAll() {
-    return `This action returns all shares`;
+  GetSharesFromPost(postID: string) {
+    throw new Error('Method not implemented.');
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} share`;
+  updateShare(shareID: string, updateShareDto: UpdateShareDto) {
+    throw new Error('Method not implemented.');
   }
-
-  update(id: number, updateShareDto: UpdateShareDto) {
-    return `This action updates a #${id} share`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} share`;
+  deleteShare(shareID: string) {
+    throw new Error('Method not implemented.');
   }
 }

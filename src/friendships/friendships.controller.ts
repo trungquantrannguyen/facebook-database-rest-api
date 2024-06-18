@@ -1,34 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { FriendshipsService } from './friendships.service';
-import { CreateFriendshipDto } from './dto/create-friendship.dto';
-import { UpdateFriendshipDto } from './dto/update-friendship.dto';
 
 @Controller('friendships')
 export class FriendshipsController {
   constructor(private readonly friendshipsService: FriendshipsService) {}
 
-  @Post()
-  create(@Body() createFriendshipDto: CreateFriendshipDto) {
-    return this.friendshipsService.create(createFriendshipDto);
+  @Post(':friendshipID')
+  addFriendship(@Param('friendshipID') friendshipID: string) {
+    return this.friendshipsService.addFriendship(friendshipID);
   }
 
-  @Get()
-  findAll() {
-    return this.friendshipsService.findAll();
+  @Get(':friendshipID')
+  searchFriendship(
+    @Param('friendshipID') friendshipID: string,
+    @Query('status') status?: 'accepted' | 'pending' | 'rejected',
+  ) {
+    return this.friendshipsService.searchFriendship(friendshipID, status);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.friendshipsService.findOne(+id);
+  @Patch('accept/:friendshipID')
+  acceptFriendship(@Param('friendshipID') friendshipID: string) {
+    return this.friendshipsService.acceptFriendship(friendshipID);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFriendshipDto: UpdateFriendshipDto) {
-    return this.friendshipsService.update(+id, updateFriendshipDto);
+  @Patch('reject/:friendshipID')
+  rejectFriendship(@Param('friendshipID') friendshipID: string) {
+    return this.friendshipsService.rejectFriendship(friendshipID);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.friendshipsService.remove(+id);
+  @Delete(':friendshipID')
+  deleteFriendship(@Param('friendshipID') friendshipID: string) {
+    return this.friendshipsService.deleteFriendship(friendshipID);
   }
 }

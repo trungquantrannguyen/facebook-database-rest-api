@@ -1,26 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFriendshipDto } from './dto/create-friendship.dto';
-import { UpdateFriendshipDto } from './dto/update-friendship.dto';
 
 @Injectable()
 export class FriendshipsService {
-  create(createFriendshipDto: CreateFriendshipDto) {
-    return 'This action adds a new friendship';
+  addFriendship(friendshipID: string) {
+    throw new Error('Method not implemented.');
   }
-
-  findAll() {
-    return `This action returns all friendships`;
+  searchFriendship(friendshipID: string, status: string) {
+    throw new Error('Method not implemented.');
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} friendship`;
+  acceptFriendship(friendshipID: string) {
+    throw new Error('Method not implemented.');
   }
-
-  update(id: number, updateFriendshipDto: UpdateFriendshipDto) {
-    return `This action updates a #${id} friendship`;
+  rejectFriendship(friendshipID: string) {
+    throw new Error('Method not implemented.');
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} friendship`;
+  deleteFriendship(friendshipID: string) {
+    throw new Error('Method not implemented.');
   }
 }

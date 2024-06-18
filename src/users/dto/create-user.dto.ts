@@ -7,7 +7,7 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsEmail()
-  emai: string;
+  email: string;
 
   @IsString()
   @IsNotEmpty()
@@ -16,4 +16,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   fullname: string;
+
+  @IsString()
+  bio: string;
 }

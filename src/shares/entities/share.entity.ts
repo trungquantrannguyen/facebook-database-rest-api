@@ -31,7 +31,7 @@ export class Share extends Model {
 
   @ForeignKey(() => User)
   @Column(DataType.UUID)
-  UserID: any;
+  userID: any;
 
   @BelongsTo(() => User)
   user: User;

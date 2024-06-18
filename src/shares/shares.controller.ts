@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SharesService } from './shares.service';
 import { CreateShareDto } from './dto/create-share.dto';
 import { UpdateShareDto } from './dto/update-share.dto';
@@ -7,28 +15,29 @@ import { UpdateShareDto } from './dto/update-share.dto';
 export class SharesController {
   constructor(private readonly sharesService: SharesService) {}
 
-  @Post()
-  create(@Body() createShareDto: CreateShareDto) {
-    return this.sharesService.create(createShareDto);
+  @Post(':postID')
+  sharePost(
+    @Param('postID') postID: string,
+    @Body() createShareDto: CreateShareDto,
+  ) {
+    return this.sharesService.sharePost(postID, createShareDto);
   }
 
-  @Get()
-  findAll() {
-    return this.sharesService.findAll();
+  @Get(':postID')
+  GetSharesFromPost(@Param('postID') postID: string) {
+    return this.sharesService.GetSharesFromPost(postID);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sharesService.findOne(+id);
+  @Patch(':shareID')
+  updateShare(
+    @Param('shareID') shareID: string,
+    @Body() updateShareDto: UpdateShareDto,
+  ) {
+    return this.sharesService.updateShare(shareID, updateShareDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateShareDto: UpdateShareDto) {
-    return this.sharesService.update(+id, updateShareDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sharesService.remove(+id);
+  @Delete(':shareID')
+  deleteShare(@Param('shareID') shareID: string) {
+    return this.sharesService.deleteShare(shareID);
   }
 }

@@ -6,6 +6,7 @@ import {
   DataType,
   ForeignKey,
   IsDate,
+  IsIn,
   IsUUID,
   Model,
   PrimaryKey,
@@ -16,12 +17,16 @@ import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 
 @Table
-export class Like extends Model {
+export class Reaction extends Model {
   @IsUUID(4)
   @PrimaryKey
   @AllowNull(false)
   @Column(DataType.UUID)
   likeID: any;
+
+  @IsIn([['Like', 'Love', 'Haha', 'Sad', 'Angry']])
+  @Column
+  reaction: string;
 
   @ForeignKey(() => Post)
   @Column(DataType.UUID)
@@ -32,7 +37,7 @@ export class Like extends Model {
 
   @ForeignKey(() => User)
   @Column(DataType.UUID)
-  UserID: any;
+  userID: any;
 
   @BelongsTo(() => User)
   user: User;

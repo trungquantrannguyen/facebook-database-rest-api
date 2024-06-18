@@ -15,7 +15,7 @@ import {
   Default,
 } from 'sequelize-typescript';
 import { Comment } from 'src/comments/entities/comment.entity';
-import { Like } from 'src/likes/entities/like.entity';
+import { Reaction } from './../../reactions/entities/reaction.entity';
 import { Share } from 'src/shares/entities/share.entity';
 import { User } from 'src/users/entities/user.entity';
 
@@ -51,8 +51,8 @@ export class Post extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @HasMany(() => Like)
-  likes: Like[];
+  @HasMany(() => Reaction)
+  likes: Reaction[];
 
   @HasMany(() => Comment)
   comments: Comment[];

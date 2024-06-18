@@ -4,23 +4,19 @@ import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  createPost(createPostDto: CreatePostDto) {
+    throw new Error('Method not implemented.');
   }
-
-  findAll() {
-    return `This action returns all posts`;
+  searchPost() {
+    throw new Error('Method not implemented.');
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  getPostByID(postID: string) {
+    throw new Error('Method not implemented.');
   }
-
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  updatePost(postID: string, updatePostDto: UpdatePostDto) {
+    throw new Error('Method not implemented.');
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  deletePost(postID: string) {
+    throw new Error('Method not implemented.');
   }
 }
