@@ -31,6 +31,11 @@ export class PostsController {
     return this.postsService.getPostByID(postID);
   }
 
+  @Get(':userID')
+  getPostByUserID(@Param('userID') userID: string) {
+    return this.postsService.getPostByUserID(userID);
+  }
+
   @Patch(':postID')
   updatePost(
     @Param('postID') postID: string,

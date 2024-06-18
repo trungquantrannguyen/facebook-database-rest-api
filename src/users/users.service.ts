@@ -37,6 +37,10 @@ export class UsersService {
     return await this.userModel.findByPk(userID);
   }
 
+  async GetUserByUsername(username: string): Promise<User> {
+    return await this.userModel.findOne({ where: { username } });
+  }
+
   async updateUser(
     userID: string,
     updateUserDto: UpdateUserDto,
