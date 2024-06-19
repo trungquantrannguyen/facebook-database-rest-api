@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { Friendship } from './entities/friendship.entity';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class FriendshipsService {
@@ -94,12 +94,12 @@ export class FriendshipsService {
       where: { friendshipID, user1ID: user.userID },
     });
 
-    console.log(yourFriendship);
+    // console.log(yourFriendship);
     if (!yourFriendship) {
       throw new NotFoundException('Friendship not found');
     }
     const yourFriendshipData = yourFriendship.dataValues;
-    console.log(yourFriendshipData);
+    // console.log(yourFriendshipData);
 
     const theirFriendship = await this.friendshipModel.findOne({
       where: {

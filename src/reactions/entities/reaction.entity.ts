@@ -4,6 +4,7 @@ import {
   Column,
   CreatedAt,
   DataType,
+  Default,
   ForeignKey,
   IsDate,
   IsIn,
@@ -21,8 +22,9 @@ export class Reaction extends Model {
   @IsUUID(4)
   @PrimaryKey
   @AllowNull(false)
+  @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
-  likeID: any;
+  reactionID: any;
 
   @IsIn([['Like', 'Love', 'Haha', 'Sad', 'Angry']])
   @Column

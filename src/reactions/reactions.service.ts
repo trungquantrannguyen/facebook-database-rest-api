@@ -1,19 +1,111 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateReactionDto } from './dto/create-reaction.dto';
 import { UpdateReactionDto } from './dto/update-reaction.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Reaction } from './entities/reaction.entity';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class ReactionsService {
-  reactPost(reactionID: string, createReactionDto: CreateReactionDto) {
-    throw new Error('Method not implemented.');
+  constructor(
+    private readonly postService: PostsService,
+    @InjectModel(Reaction) private readonly reactionModel: typeof Reaction,
+  ) {}
+  async reactPost(
+    postID: string,
+    createReactionDto: CreateReactionDto,
+    user: any,
+  ) {
+    const post = await this.postService.getPostByID(postID);
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    const existingReaction = await this.reactionModel.findOne({
+      where: { userID: user.userID },
+    });
+
+    if (existingReaction) {
+      if (existingReaction.reaction !== createReactionDto.reaction) {
+        return await this.reactionModel.update(
+          { reaction: createReactionDto.reaction },
+          { where: { userID: user.userID } },
+        );
+      } else {
+        return existingReaction;
+      }
+    }
+
+    return await this.reactionModel.create({
+      reaction: createReactionDto.reaction,
+      postID: postID,
+      userID: user.userID,
+    });
   }
-  getReactionsFromPost(reactionID: string) {
-    throw new Error('Method not implemented.');
+
+  async getReactionsFromPost(postID: string) {
+    const post = await this.postService.getPostByID(postID);
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return await this.reactionModel.findAll({
+      where: { postID: postID },
+    });
   }
-  updateReaction(reactionID: string, updateReactionDto: UpdateReactionDto) {
-    throw new Error('Method not implemented.');
+
+  async updateReaction(
+    reactionID: string,
+    updateReactionDto: UpdateReactionDto,
+    user: any,
+  ) {
+    const reaction = await this.reactionModel.findByPk(reactionID);
+    if (!reaction) {
+      throw new NotFoundException('Reaction not found');
+    }
+
+    const reactionData = reaction.dataValues;
+
+    if (reactionData.userID !== user.userID) {
+      throw new UnauthorizedException('You can only update your reaction');
+    }
+
+    const post = await this.postService.getPostByID(reactionData.postID);
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return await this.reactionModel.update(
+      { ...updateReactionDto },
+      { where: { reactionID }, returning: true },
+    );
   }
-  deleteReaction(reactionID: string) {
-    throw new Error('Method not implemented.');
+
+  async deleteReaction(reactionID: string, user: any) {
+    const reaction = await this.reactionModel.findByPk(reactionID);
+    if (!reaction) {
+      throw new NotFoundException('Reaction not found');
+    }
+
+    const reactionData = reaction.dataValues;
+
+    if (reactionData.userID !== user.userID) {
+      throw new UnauthorizedException('You can only update your reaction');
+    }
+
+    const post = await this.postService.getPostByID(reactionData.postID);
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return await this.reactionModel.destroy({ where: { reactionID } });
   }
 }
