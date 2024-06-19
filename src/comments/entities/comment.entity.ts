@@ -38,9 +38,11 @@ export class Comment extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @AllowNull(false)
   @Column
   content: string;
+
+  @Column
+  image: string;
 
   @IsDate
   @CreatedAt

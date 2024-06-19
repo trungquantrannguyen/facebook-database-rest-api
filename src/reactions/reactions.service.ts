@@ -4,7 +4,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateReactionDto } from './dto/create-reaction.dto';
-import { UpdateReactionDto } from './dto/update-reaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Reaction } from './entities/reaction.entity';
 import { PostsService } from 'src/posts/posts.service';
@@ -60,34 +59,6 @@ export class ReactionsService {
     });
   }
 
-  async updateReaction(
-    reactionID: string,
-    updateReactionDto: UpdateReactionDto,
-    user: any,
-  ) {
-    const reaction = await this.reactionModel.findByPk(reactionID);
-    if (!reaction) {
-      throw new NotFoundException('Reaction not found');
-    }
-
-    const reactionData = reaction.dataValues;
-
-    if (reactionData.userID !== user.userID) {
-      throw new UnauthorizedException('You can only update your reaction');
-    }
-
-    const post = await this.postService.getPostByID(reactionData.postID);
-
-    if (!post) {
-      throw new NotFoundException('Post not found');
-    }
-
-    return await this.reactionModel.update(
-      { ...updateReactionDto },
-      { where: { reactionID }, returning: true },
-    );
-  }
-
   async deleteReaction(reactionID: string, user: any) {
     const reaction = await this.reactionModel.findByPk(reactionID);
     if (!reaction) {
@@ -97,7 +68,7 @@ export class ReactionsService {
     const reactionData = reaction.dataValues;
 
     if (reactionData.userID !== user.userID) {
-      throw new UnauthorizedException('You can only update your reaction');
+      throw new UnauthorizedException('You can only delete your reaction');
     }
 
     const post = await this.postService.getPostByID(reactionData.postID);
