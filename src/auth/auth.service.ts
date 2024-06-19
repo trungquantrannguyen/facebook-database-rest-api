@@ -25,10 +25,11 @@ export class AuthService {
     // console.log(result);
     return result;
   }
-  async signIn(user: any) {
+  async signIn(user: any, res: any) {
     const payload = { userID: user.userID, username: user.username };
     // console.log(process.env.JWT_SECRET);
     const token = await this.jwtService.signAsync(payload);
+    res.cookie('access_token', token);
     // console.log(token);
     return { user, token };
   }

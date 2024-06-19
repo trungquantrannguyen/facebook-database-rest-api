@@ -7,6 +7,8 @@ import { LocalStrategy } from './local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import * as dotenv from 'dotenv';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 dotenv.config();
 @Module({
@@ -18,7 +20,12 @@ dotenv.config();
       signOptions: { expiresIn: '3600s' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })

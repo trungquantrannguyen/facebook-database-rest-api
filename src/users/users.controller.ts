@@ -7,15 +7,20 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Public } from 'src/auth/decorators/auth.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
@@ -26,12 +31,12 @@ export class UsersController {
     return this.usersService.searchUser(username);
   }
 
-  @Get('/id/:userID')
-  GetUserByID(@Param('userID') userID: string) {
-    return this.usersService.GetUserByID(userID);
+  @Get()
+  GetUserByID(@Request() req: any) {
+    return this.usersService.GetUserByID(req.user);
   }
 
-  @Get('/username/:username')
+  @Get('/:username')
   GetUserByUsername(@Param('username') username: string) {
     return this.usersService.GetUserByUsername(username);
   }
