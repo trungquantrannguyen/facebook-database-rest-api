@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
@@ -22,14 +22,14 @@ export class AuthService {
     }
 
     const { password, ...result } = user.dataValues;
-    console.log(result);
+    // console.log(result);
     return result;
   }
   async signIn(user: any) {
     const payload = { userID: user.userID, username: user.username };
     // console.log(process.env.JWT_SECRET);
     const token = await this.jwtService.signAsync(payload);
-    console.log(token);
+    // console.log(token);
     return { user, token };
   }
 }

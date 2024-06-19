@@ -8,7 +8,7 @@ import { UsersModule } from 'src/users/users.module';
 @Module({
   controllers: [FriendshipsController],
   providers: [FriendshipsService],
-  imports: [SequelizeModule.forFeature([Friendship]), UsersModule],
+  imports: [UsersModule, SequelizeModule.forFeature([Friendship])],
   exports: [SequelizeModule],
 })
 export class FriendshipsModule {}

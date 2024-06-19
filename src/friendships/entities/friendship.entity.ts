@@ -26,6 +26,7 @@ export class Friendship extends Model {
   friendshipID: any;
 
   @IsIn([['pending', 'accepted', 'rejected']])
+  @Default('pending')
   @Column
   status: string;
 
