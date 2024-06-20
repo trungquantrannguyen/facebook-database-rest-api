@@ -13,14 +13,16 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { Public } from 'src/auth/decorators/auth.decorator';
+import { DoesUserExist } from './doesUserExist.guard';
+import { ClearCookies } from '@nestjsplus/cookies';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Public()
+  @UseGuards(DoesUserExist)
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
@@ -31,26 +33,20 @@ export class UsersController {
     return this.usersService.searchUser(username);
   }
 
-  @Get()
-  GetUserByID(userID: string) {
+  @Get(':userID')
+  GetUserByID(@Param('userID') userID: any) {
     return this.usersService.GetUserByID(userID);
   }
 
-  @Get('/:username')
-  GetUserByUsername(@Param('username') username: string) {
-    return this.usersService.GetUserByUsername(username);
+  @Patch()
+  updateUser(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateUser(req.user, updateUserDto);
   }
 
-  @Patch(':userID')
-  updateUser(
-    @Param('userID') userID: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return this.usersService.updateUser(userID, updateUserDto);
-  }
-
-  @Delete(':userID')
-  deleteUser(@Param('userID') userID: string) {
-    return this.usersService.deleteUser(userID);
+  @ClearCookies('access_token')
+  @Delete()
+  deleteUser(@Request() req: any) {
+    // res.clearCookie('access_token');
+    return this.usersService.deleteUser(req.user);
   }
 }

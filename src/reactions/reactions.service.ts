@@ -1,7 +1,9 @@
 import {
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateReactionDto } from './dto/create-reaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -11,9 +13,15 @@ import { PostsService } from 'src/posts/posts.service';
 @Injectable()
 export class ReactionsService {
   constructor(
+    @Inject(forwardRef(() => PostsService))
     private readonly postService: PostsService,
     @InjectModel(Reaction) private readonly reactionModel: typeof Reaction,
   ) {}
+  async getReactionCountFromPost(postID: string) {
+    return (await this.reactionModel.findAndCountAll({ where: { postID } }))
+      .count;
+  }
+
   async reactPost(
     postID: string,
     createReactionDto: CreateReactionDto,

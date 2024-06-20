@@ -1,7 +1,9 @@
 import {
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateShareDto } from './dto/create-share.dto';
 import { UpdateShareDto } from './dto/update-share.dto';
@@ -13,8 +15,13 @@ import { PostsService } from 'src/posts/posts.service';
 export class SharesService {
   constructor(
     @InjectModel(Share) private readonly shareModel: typeof Share,
+    @Inject(forwardRef(() => PostsService))
     private readonly postsService: PostsService,
   ) {}
+
+  async getShareCountFromPost(postID: string) {
+    return (await this.shareModel.findAndCountAll({ where: { postID } })).count;
+  }
 
   sharePost(postID: string, createShareDto: CreateShareDto, user: any) {
     if (!createShareDto.content) {

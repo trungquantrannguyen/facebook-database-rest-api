@@ -11,6 +11,7 @@ import { ReactionsModule } from './reactions/reactions.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 // import { DatabaseModule } from './core/database/database.module';
+import { LoggerModule } from './logger/logger.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -47,6 +48,7 @@ dotenv.config();
     SharesModule,
     ReactionsModule,
     AuthModule,
+    LoggerModule,
     // DatabaseModule,
   ],
   controllers: [AppController],

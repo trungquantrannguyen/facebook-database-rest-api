@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -13,9 +15,15 @@ import { InjectModel } from '@nestjs/sequelize';
 @Injectable()
 export class CommentsService {
   constructor(
+    @Inject(forwardRef(() => PostsService))
     private readonly postService: PostsService,
     @InjectModel(Comment) private readonly commentModel: typeof Comment,
   ) {}
+
+  async getCommentCountFromPost(postID: string) {
+    return (await this.commentModel.findAndCountAll({ where: { postID } }))
+      .count;
+  }
 
   async commentPost(
     postID: string,

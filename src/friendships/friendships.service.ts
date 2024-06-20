@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { Friendship } from './entities/friendship.entity';
 import { InjectModel } from '@nestjs/sequelize';
@@ -7,6 +12,7 @@ import { Op } from 'sequelize';
 @Injectable()
 export class FriendshipsService {
   constructor(
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     @InjectModel(Friendship)
     private readonly friendshipModel: typeof Friendship,
@@ -72,6 +78,7 @@ export class FriendshipsService {
 
     return { acceptedFriendRequestData, friendship };
   }
+
   async rejectFriendship(friendshipID: string, user: any) {
     const friendRequest = await this.friendshipModel.findOne({
       where: { friendshipID, user2ID: user.userID },
@@ -98,7 +105,7 @@ export class FriendshipsService {
     if (!yourFriendship) {
       throw new NotFoundException('Friendship not found');
     }
-    const yourFriendshipData = yourFriendship.dataValues;
+    // const yourFriendshipData = yourFriendship.dataValues;
     // console.log(yourFriendshipData);
 
     const theirFriendship = await this.friendshipModel.findOne({
