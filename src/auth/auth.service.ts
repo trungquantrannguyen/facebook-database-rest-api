@@ -22,7 +22,7 @@ export class AuthService {
     }
 
     const { password, ...result } = user.dataValues;
-    // console.log(result);
+    console.log(result);
     return result;
   }
   async signIn(user: any, res: any) {
