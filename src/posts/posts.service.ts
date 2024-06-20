@@ -44,18 +44,18 @@ export class PostsService {
     return { reactionCount, commentCount, shareCount };
   }
   async searchPost(content: string) {
-    let resultPost = [];
+    let resultPost = [{}];
     if (content) {
       const posts = await this.postModel.findAll({
         where: { content: { [Op.regexp]: content } },
         order: [['created_at', 'ASC']],
         limit: 10,
       });
-      for (let post of posts) {
-        let i = 0;
-        const postDataCount = await this.getPostDataCount(post.postID);
-        resultPost[i] = { post, ...postDataCount };
-        i++;
+      for (let i = 0; i < posts.length; i++) {
+        const postDataCount = await this.getPostDataCount(
+          posts[i].dataValues.postID,
+        );
+        resultPost[i] = { ...posts[i].dataValues, ...postDataCount };
       }
       return resultPost;
     }
@@ -63,11 +63,12 @@ export class PostsService {
       order: [['created_at', 'DESC']],
       limit: 10,
     });
-    for (let post of posts) {
-      let i = 0;
-      const postDataCount = await this.getPostDataCount(post.postID);
-      resultPost[i] = { ...post.dataValues, ...postDataCount };
-      i++;
+    // console.log(posts[0]);
+    for (let i = 0; i < posts.length; i++) {
+      const postDataCount = await this.getPostDataCount(
+        posts[i].dataValues.postID,
+      );
+      resultPost[i] = { ...posts[i].dataValues, ...postDataCount };
     }
     return resultPost;
   }
@@ -75,43 +76,46 @@ export class PostsService {
   async getPostByID(postID: string) {
     const post = await this.postModel.findByPk(postID);
     const postDataCount = await this.getPostDataCount(post.postID);
-    return { post, postDataCount };
+    return { ...post.dataValues, ...postDataCount };
   }
 
   async getPostsByUserID(userID: string) {
-    let resultPost;
+    let resultPost = [{}];
     const posts = await this.postModel.findAll({
       where: { userID },
       order: [['created_at', 'DESC']],
     });
-    for (let post of posts) {
-      let i = 0;
-      const postDataCount = await this.getPostDataCount(post.postID);
-      resultPost[i] = { ...post.dataValues, ...postDataCount };
-      i++;
+    // console.log(posts);
+    for (let i = 0; i < posts.length; i++) {
+      const postDataCount = await this.getPostDataCount(
+        posts[i].dataValues.postID,
+      );
+      // console.log(postDataCount);
+      resultPost[i] = { ...posts[i].dataValues, ...postDataCount };
     }
     return resultPost;
   }
 
   async updatePost(postID: string, updatePostDto: UpdatePostDto, user: any) {
-    let resultPost;
+    let resultPost = [{}];
     const post = await this.getPostByID(postID);
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-
-    if (user.userID !== post.post.userID) {
+    console.log(post.userID);
+    console.log(user.userID);
+    if (user.userID !== post.userID) {
       throw new UnauthorizedException('You can only update your post');
     }
     const [affectedRows, posts] = await this.postModel.update(
       { ...updatePostDto },
       { where: { postID }, returning: true },
     );
-    for (let post of posts) {
-      let i = 0;
-      const postDataCount = await this.getPostDataCount(post.postID);
-      resultPost[i] = { ...post.dataValues, ...postDataCount };
-      i++;
+    for (let i = 0; i < posts.length; i++) {
+      const postDataCount = await this.getPostDataCount(
+        posts[i].dataValues.postID,
+      );
+      resultPost[i] = { ...posts[i].dataValues, ...postDataCount };
     }
     return resultPost;
   }
@@ -122,7 +126,7 @@ export class PostsService {
       throw new NotFoundException('Post not found');
     }
 
-    if (user.userID !== post.post.userID) {
+    if (user.userID !== post.userID) {
       throw new UnauthorizedException('You can only delete your post');
     }
     return await this.postModel.destroy({ where: { postID } });
