@@ -37,8 +37,8 @@ export class UsersService {
       limit: 10,
     });
   }
-  async GetUserByID(user: any): Promise<User> {
-    return await this.userModel.findByPk(user.userID);
+  async GetUserByID(userID: any): Promise<User> {
+    return await this.userModel.findByPk(userID);
   }
 
   async GetUserByUsername(username: string): Promise<User> {

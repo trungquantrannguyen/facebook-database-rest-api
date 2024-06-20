@@ -8,6 +8,7 @@ async function bootstrap() {
   // dotenv.config();
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
   await app.listen(3000);
 }
 bootstrap();

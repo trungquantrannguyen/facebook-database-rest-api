@@ -1,19 +1,71 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateShareDto } from './dto/create-share.dto';
 import { UpdateShareDto } from './dto/update-share.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Share } from './entities/share.entity';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class SharesService {
-  sharePost(postID: string, createShareDto: CreateShareDto) {
-    throw new Error('Method not implemented.');
+  constructor(
+    @InjectModel(Share) private readonly shareModel: typeof Share,
+    private readonly postsService: PostsService,
+  ) {}
+
+  sharePost(postID: string, createShareDto: CreateShareDto, user: any) {
+    if (!createShareDto.content) {
+      return this.shareModel.create({
+        postID: postID,
+        userID: user.userID,
+      });
+    }
+    return this.shareModel.create({
+      content: createShareDto.content,
+      postID: postID,
+      userID: user.userID,
+    });
   }
-  GetSharesFromPost(postID: string) {
-    throw new Error('Method not implemented.');
+  getSharesFromPost(postID: string) {
+    const post = this.postsService.getPostByID(postID);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return this.shareModel.findAll({ where: { postID } });
   }
-  updateShare(shareID: string, updateShareDto: UpdateShareDto) {
-    throw new Error('Method not implemented.');
+  async updateShare(
+    shareID: string,
+    updateShareDto: UpdateShareDto,
+    user: any,
+  ) {
+    const share = await this.shareModel.findByPk(shareID);
+
+    if (!share) {
+      throw new NotFoundException('Share not found');
+    }
+    if (share.userID !== user.userID) {
+      throw new UnauthorizedException('You can only update your share');
+    }
+
+    return await this.shareModel.update(
+      { ...updateShareDto },
+      { where: { shareID }, returning: true },
+    );
   }
-  deleteShare(shareID: string) {
-    throw new Error('Method not implemented.');
+  async deleteShare(shareID: string, user: any) {
+    const share = await this.shareModel.findByPk(shareID);
+
+    if (!share) {
+      throw new NotFoundException('Share not found');
+    }
+    if (share.userID !== user.userID) {
+      throw new UnauthorizedException('You can only delete your share');
+    }
+
+    return await this.shareModel.destroy({ where: { shareID } });
   }
 }

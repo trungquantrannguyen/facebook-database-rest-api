@@ -32,8 +32,8 @@ export class UsersController {
   }
 
   @Get()
-  GetUserByID(@Request() req: any) {
-    return this.usersService.GetUserByID(req.user);
+  GetUserByID(userID: string) {
+    return this.usersService.GetUserByID(userID);
   }
 
   @Get('/:username')

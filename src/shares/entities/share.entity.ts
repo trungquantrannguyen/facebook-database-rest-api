@@ -11,6 +11,7 @@ import {
   CreatedAt,
   UpdatedAt,
   DataType,
+  Default,
 } from 'sequelize-typescript';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -19,6 +20,7 @@ export class Share extends Model {
   @IsUUID(4)
   @PrimaryKey
   @AllowNull(false)
+  @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   shareID: any;
 
